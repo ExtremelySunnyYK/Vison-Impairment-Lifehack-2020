@@ -30,6 +30,8 @@ from keras.layers import Dense, Conv2D, Flatten, GlobalAveragePooling2D, Dropout
 from keras.preprocessing.image import ImageDataGenerator
 from sklearn.metrics import cohen_kappa_score
 
+EFFNET = 5
+
 # Path specifications
 KAGGLE_DIR = '../input/aptos2019-blindness-detection/'
 TRAIN_DF_PATH = KAGGLE_DIR + "train.csv"
@@ -50,4 +52,3 @@ os.environ['PYTHONHASHSEED'] = str(seed)
 # For keeping time. GPU limit for this competition is set to ± 9 hours.
 t_start = time.time()
 
-EFFNET = 5
