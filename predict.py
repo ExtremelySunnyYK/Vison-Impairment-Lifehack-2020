@@ -360,11 +360,23 @@ class OptimizedRounder(object):
 
 def main():
     setup()
+        # Example of preprocessed images from every label
+    fig, ax = plt.subplots(1, 5, figsize=(15, 6))
+    for i in range(5):
+        sample = train_df[train_df['diagnosis'] == i].sample(1)
+        image_name = sample['id_code'].item()
+        X = preprocess_image(cv2.imread(f"{TRAIN_IMG_PATH}{image_name}"))
+        ax[i].set_title(f"Image: {image_name}\n Label = {sample['diagnosis'].item()}", 
+                        weight='bold', fontsize=10)
+        ax[i].axis('off')
+        ax[i].imshow(X);
+        
     # Initialize model
     model = build_model()
     model.load_weights('notebook/effnet_b5_model.h5')
     
-    model = load_model('notebook/effnet_b5_model.h5')
+    # model = load_model('notebook/effnet_b5_model.h5')
+    
 
     # Optimize on validation data and evaluate again
     y_val_preds, val_labels = get_preds_and_labels(model, val_generator)
