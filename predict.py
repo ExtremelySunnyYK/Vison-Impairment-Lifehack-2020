@@ -359,8 +359,6 @@ class OptimizedRounder(object):
 
 def main():
     setup()
-    # Example of preprocessed images from every label
-    fig, ax = plt.subplots(1, 5, figsize=(15, 6))
 
     # change code for 1 image
     for i in range(5):
@@ -375,34 +373,7 @@ def main():
      # We use a small batch size so we can handle large images easily
     BATCH_SIZE = 4
 
-    # Add Image augmentation to our generator
-    train_datagen = ImageDataGenerator(rotation_range=360,
-                                    horizontal_flip=True,
-                                    vertical_flip=True,
-                                    validation_split=TRAIN_VAL_RATIO,
-                                    preprocessing_function=preprocess_image, 
-                                    rescale=1 / 255.)
-
-    # Use the dataframe to define train and validation generators
-    train_generator = train_datagen.flow_from_dataframe(train_df, 
-                                                        x_col='id_code', 
-                                                        y_col='diagnosis',
-                                                        directory = TRAIN_IMG_PATH,
-                                                        target_size=(IMG_WIDTH, IMG_HEIGHT),
-                                                        batch_size=BATCH_SIZE,
-                                                        class_mode='other', 
-                                                        subset='training',
-                                                        seed=seed)
-
-    val_generator = train_datagen.flow_from_dataframe(train_df, 
-                                                    x_col='id_code', 
-                                                    y_col='diagnosis',
-                                                    directory = TRAIN_IMG_PATH,
-                                                    target_size=(IMG_WIDTH, IMG_HEIGHT),
-                                                    batch_size=BATCH_SIZE,
-                                                    class_mode='other',
-                                                    subset='validation',
-                                                    seed=seed)
+   
         # Load in EfficientNetB5
     effnet = EfficientNet(weights=None,  # None,  # 'imagenet',
                             include_top=False,
@@ -417,7 +388,6 @@ def main():
         if "batch_normalization" in layer.name:
             effnet.layers[i] = GroupNormalization(groups=32, axis=-1, epsilon=0.00001)
      
-
 
     # Initialize model
     model = build_model()
@@ -434,12 +404,12 @@ def main():
                             epsilon=0.0001)
 
     # Optimize on validation data and evaluate again
-    y_val_preds, val_labels = get_preds_and_labels(model, val_generator)
-    optR = OptimizedRounder()
-    optR.fit(y_val_preds, val_labels)
-    coefficients = optR.coefficients()
-    opt_val_predictions = optR.predict(y_val_preds, coefficients)
-    new_val_score = cohen_kappa_score(val_labels, opt_val_predictions, weights="quadratic")
-    new_acc_val_score = accuracy_score(val_labels, opt_val_predictions)
+    preds = model.predict(x)
+
+
+   
+
+if __name__=="main":
+    main()
 
 

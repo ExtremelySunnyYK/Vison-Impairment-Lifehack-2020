@@ -22,7 +22,7 @@ def get_score(left_eye,right_eye):
     
     :returns : AREDS Score
     """"
-    score = predict_simplified_score.flask_predict()
+    score = predict.main()
     print("* Model loaded!")
 
     return score
