@@ -17,7 +17,7 @@ from tensorflow.keras.preprocessing import image
 # Some utilites
 import numpy as np
 from util import base64_to_pil
-
+import predict
 
 # Declare a flask app
 app = Flask(__name__)
@@ -32,7 +32,7 @@ print('Model loaded. Check http://127.0.0.1:5000/')
 
 
 # Model saved with Keras model.save()
-MODEL_PATH = 'models/your_model.h5'
+MODEL_PATH = 'models/effnet_b5_model.h5'
 
 # Load your own trained model
 # model = load_model(MODEL_PATH)
