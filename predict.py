@@ -155,8 +155,7 @@ def modelling():
                             include_top=False,
                             input_shape=(IMG_WIDTH, IMG_HEIGHT, CHANNELS))
     effnet.load_weights(
-        '../input/efficientnet-weights-for-keras/advprop/notop/efficientnet-b{}_weights_imagenet_1000_advprop_notop.h5'.format(
-            EFFNET
+        'notebook/effnet_b5_model.h5'
         )
     )
 
@@ -360,8 +359,10 @@ class OptimizedRounder(object):
 
 def main():
     setup()
-        # Example of preprocessed images from every label
+    # Example of preprocessed images from every label
     fig, ax = plt.subplots(1, 5, figsize=(15, 6))
+
+    # change code for 1 image
     for i in range(5):
         sample = train_df[train_df['diagnosis'] == i].sample(1)
         image_name = sample['id_code'].item()
@@ -370,13 +371,67 @@ def main():
                         weight='bold', fontsize=10)
         ax[i].axis('off')
         ax[i].imshow(X);
-        
+
+     # We use a small batch size so we can handle large images easily
+    BATCH_SIZE = 4
+
+    # Add Image augmentation to our generator
+    train_datagen = ImageDataGenerator(rotation_range=360,
+                                    horizontal_flip=True,
+                                    vertical_flip=True,
+                                    validation_split=TRAIN_VAL_RATIO,
+                                    preprocessing_function=preprocess_image, 
+                                    rescale=1 / 255.)
+
+    # Use the dataframe to define train and validation generators
+    train_generator = train_datagen.flow_from_dataframe(train_df, 
+                                                        x_col='id_code', 
+                                                        y_col='diagnosis',
+                                                        directory = TRAIN_IMG_PATH,
+                                                        target_size=(IMG_WIDTH, IMG_HEIGHT),
+                                                        batch_size=BATCH_SIZE,
+                                                        class_mode='other', 
+                                                        subset='training',
+                                                        seed=seed)
+
+    val_generator = train_datagen.flow_from_dataframe(train_df, 
+                                                    x_col='id_code', 
+                                                    y_col='diagnosis',
+                                                    directory = TRAIN_IMG_PATH,
+                                                    target_size=(IMG_WIDTH, IMG_HEIGHT),
+                                                    batch_size=BATCH_SIZE,
+                                                    class_mode='other',
+                                                    subset='validation',
+                                                    seed=seed)
+        # Load in EfficientNetB5
+    effnet = EfficientNet(weights=None,  # None,  # 'imagenet',
+                            include_top=False,
+                            input_shape=(IMG_WIDTH, IMG_HEIGHT, CHANNELS))
+    effnet.load_weights(
+        'notebook/effnet_b5_model.h5'
+        )
+    )
+
+    # Replace all Batch Normalization layers by Group Normalization layers
+    for i, layer in enumerate(effnet.layers):
+        if "batch_normalization" in layer.name:
+            effnet.layers[i] = GroupNormalization(groups=32, axis=-1, epsilon=0.00001)
+     
+
+
     # Initialize model
     model = build_model()
-    model.load_weights('notebook/effnet_b5_model.h5')
     
-    # model = load_model('notebook/effnet_b5_model.h5')
-    
+    # For tracking Quadratic Weighted Kappa score
+    kappa_metrics = Metrics()
+    # Monitor MSE to avoid overfitting and save best model
+    es = EarlyStopping(monitor='val_loss', mode='auto', verbose=1, patience=EPOCHS // 2)
+    rlr = ReduceLROnPlateau(monitor='val_loss', 
+                            factor=0.5, 
+                            patience=EPOCHS // 4, 
+                            verbose=1, 
+                            mode='auto', 
+                            epsilon=0.0001)
 
     # Optimize on validation data and evaluate again
     y_val_preds, val_labels = get_preds_and_labels(model, val_generator)
