@@ -361,8 +361,8 @@ class OptimizedRounder(object):
 def main():
     setup()
     # Initialize model
-    # model = build_model()
-    # model.load_weights('notebook/effnet_b5_model.h5')
+    model = build_model()
+    model.load_weights('notebook/effnet_b5_model.h5')
     
     model = load_model('notebook/effnet_b5_model.h5')
 
@@ -374,3 +374,5 @@ def main():
     opt_val_predictions = optR.predict(y_val_preds, coefficients)
     new_val_score = cohen_kappa_score(val_labels, opt_val_predictions, weights="quadratic")
     new_acc_val_score = accuracy_score(val_labels, opt_val_predictions)
+
+
