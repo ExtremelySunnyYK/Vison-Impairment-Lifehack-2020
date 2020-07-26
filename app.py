@@ -1,47 +1,95 @@
-import base64
-import numpy as np
-import io
-from PIL import Image
+import os
+import sys
+
+# Flask
+from flask import Flask, redirect, url_for, request, render_template, Response, jsonify, redirect
+from werkzeug.utils import secure_filename
+from gevent.pywsgi import WSGIServer
+
+# TensorFlow and tf.keras
 import tensorflow as tf
 from tensorflow import keras
-from tensorflow.python.keras.models import Sequential, load_model
-from keras.models import load_model
-from tensorflow.python.keras.preprocessing.image import ImageDataGenerator, img_to_array
-from flask import request
-from flask import jsonify
-from flask import Flask
-from predict import *
 
+from tensorflow.keras.applications.imagenet_utils import preprocess_input, decode_predictions
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+
+# Some utilites
+import numpy as np
+from util import base64_to_pil
+
+
+# Declare a flask app
 app = Flask(__name__)
 
 
-def get_score(left_eye,right_eye):
-    """
-    Returns AREDS Score given image
-    :Parameters : Image of eyes
-    
-    :returns : AREDS Score
-    """"
-    score = predict.main()
-    print("* Model loaded!")
+# You can use pretrained model from Keras
+# Check https://keras.io/applications/
+from keras.applications.mobilenet_v2 import MobileNetV2
+model = MobileNetV2(weights='imagenet')
 
-    return score
+print('Model loaded. Check http://127.0.0.1:5000/')
 
-@app.route("/predict", methods=["POST"])
+
+# Model saved with Keras model.save()
+MODEL_PATH = 'models/your_model.h5'
+
+# Load your own trained model
+# model = load_model(MODEL_PATH)
+# model._make_predict_function()          # Necessary
+# print('Model loaded. Start serving...')
+
+
+def model_predict(img, model):
+    img = img.resize((224, 224))
+
+    # Preprocessing the image
+    x = image.img_to_array(img)
+    # x = np.true_divide(x, 255)
+    x = np.expand_dims(x, axis=0)
+
+    # Be careful how your trained model deals with the input
+    # otherwise, it won't make correct prediction!
+    x = preprocess_input(x, mode='tf')
+
+    preds = model.predict(x)
+    return preds
+
+
+@app.route('/', methods=['GET'])
+def index():
+    # Main page
+    return render_template('index.html')
+
+
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
-    message = request.get_json(force=True)
-    encoded = message['image']
-    decoded = base64.b64decode(encoded)
-    left_eye = Image.open(io.BytesIO(decoded))
-    right_eye = Image.open(io.BytesIO(decoded))
-    print(" * Loading Keras model...")
-    score = get_score(left_eye,right_eye)
-    # can add other features as well
-    # such as drusen size ...
+    if request.method == 'POST':
+        # Get the image from post request
+        img = base64_to_pil(request.json)
 
-    response = {
-        'AREDS': {
-            'Level': score,
-        }
-    }
-    return jsonify(response)
+        # Save the image to ./uploads
+        # img.save("./uploads/image.png")
+
+        # Make prediction
+        preds = model_predict(img, model)
+
+        # Process your result for human
+        pred_proba = "{:.3f}".format(np.amax(preds))    # Max probability
+        pred_class = decode_predictions(preds, top=1)   # ImageNet Decode
+
+        result = str(pred_class[0][0][1])               # Convert to string
+        result = result.replace('_', ' ').capitalize()
+        
+        # Serialize the result, you can add additional fields
+        return jsonify(result=result, probability=pred_proba)
+
+    return None
+
+
+if __name__ == '__main__':
+    # app.run(port=5002, threaded=False)
+
+    # Serve the app with gevent
+    http_server = WSGIServer(('0.0.0.0', 5000), app)
+    http_server.serve_forever()
