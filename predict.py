@@ -358,6 +358,13 @@ class OptimizedRounder(object):
 
 
 def main():
+    """"
+    Get predictions and labels from the model
+
+    :param image: image of the upload
+
+    :returns: ARED's Score
+    """
     setup()
 
     # change code for 1 image
