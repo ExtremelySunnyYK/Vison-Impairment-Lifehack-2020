@@ -23,38 +23,17 @@ import predict
 app = Flask(__name__)
 
 
-def load_model():
+def predict(img):
     """
-    Returns Model for prediction
+    Returns prediction
     
-    :returns : model
+    :returns : prediction
     """
-
-    EFFNET = 5
-    exec('from efficientnet.keras import EfficientNetB{} as EfficientNet'.format(EFFNET))
-    
-    # Load in EfficientNetB5
-    effnet = EfficientNet(weights=None,  # None,  # 'imagenet',
-                            include_top=False,
-                            input_shape=(IMG_WIDTH, IMG_HEIGHT, CHANNELS))
-    effnet.load_weights(
-        'notebook/effnet_b5_model.h5'
-        )
-    )
-
-    # Replace all Batch Normalization layers by Group Normalization layers
-    for i, layer in enumerate(effnet.layers):
-        if "batch_normalization" in layer.name:
-            effnet.layers[i] = GroupNormalization(groups=32, axis=-1, epsilon=0.00001)
-
-    # Build Custom Model from EFFNET 5
-    model = predict.build_model()
-
-    return model
-
+    predict.main()
+   
 
     
-print('Model loaded. Check http://127.0.0.1:5000/')
+    print('Model loaded. Check http://127.0.0.1:5000/')
 
 
 # Model saved with Keras model.save()
@@ -65,21 +44,39 @@ MODEL_PATH = 'models/effnet_b5_model.h5'
 # model._make_predict_function()          # Necessary
 # print('Model loaded. Start serving...')
 
+def severity(sev_num):
+    """
+    :parameter sev_num : Severity number
 
-def model_predict(img, model):
-    img = img.resize((224, 224))
+    :returns sev_diag : Severity of diagnosis
+    """
+    sev_dict = {0:"0 - No DR",.
+    1:"1 - Mild",
+    2:"2 - Moderate",
+    3:"3 - Severe",
+    4:"4 - Proliferative DR",
+    }
 
-    # Preprocessing the image
-    x = image.img_to_array(img)
-    # x = np.true_divide(x, 255)
-    x = np.expand_dims(x, axis=0)
+    sev_diag = sev_dict[sev_num]
 
-    # Be careful how your trained model deals with the input
-    # otherwise, it won't make correct prediction!
-    x = preprocess_input(x, mode='tf')
+    return sev_diag
 
-    preds = model.predict(x)
-    return preds
+
+
+# def model_predict(img, model):
+#     img = img.resize((224, 224))
+
+#     # Preprocessing the image
+#     x = image.img_to_array(img)
+#     # x = np.true_divide(x, 255)
+#     x = np.expand_dims(x, axis=0)
+
+#     # Be careful how your trained model deals with the input
+#     # otherwise, it won't make correct prediction!
+#     x = preprocess_input(x, mode='tf')
+
+#     preds = model.predict(x)
+#     return preds
 
 
 @app.route('/', methods=['GET'])

@@ -382,7 +382,7 @@ def preprocess_image(image, sigmaX=10):
     # image = cv2.addWeighted (image,4, cv2.GaussianBlur(image, (0,0) ,sigmaX), -4, 128)
     return image
 
-def main():
+def main(img):
     """"
     Get predictions and labels from the model
 
@@ -452,27 +452,23 @@ def main():
             
     # Initialize model
     model = build_model()
-    model.load_weights("../input/trained-effnet-b5-modelh5/effnet_b5_model(1).h5")
+    model.load_weights("models/effnet_b5_model.h5")
     
     #optimize for kappa layer
     coefficients = [0.51 1.51 2.52 3.52]
     
-    testImg = tf.keras.preprocessing.image.load_img("../input/aptos2019-blindness-detection/train_images/0097f532ac9f.png",
-                                                    target_size=(IMG_WIDTH, IMG_HEIGHT)
-                                            
-                                                )
 
-    testImg_arr = keras.preprocessing.image.img_to_array(testImg)
-    testImg_arr = preprocess_image(testImg_arr)
-    testImg_arr = np.array([testImg_arr])
-    predictions = model.predict(testImg_arr)
+    img_arr = keras.preprocessing.image.img_to_array(img)
+    img_arr = preprocess_image(img)
+    img_arr = np.array([img_arr])
+    predictions = model.predict(img_arr)
     print(predictions)
     
     optR = OptimizedRounder()
-    testImg_diag = optR.predict(predictions, coefficients).astype(np.uint8)
-    print(testImg_diag)
+    img_diag = optR.predict(predictions, coefficients).astype(np.uint8)
+    print(img_diag)
     
-    return testImg_diag
+    return img_diag
     
 if __name__=="main":
     main()

@@ -12,12 +12,9 @@ An automated tool for grading severity of diabetic retinopathy would be very use
 
 Clearly, this dataset and deep learning problem is quite important. 
 
-## A look at the data:
+## Meaning Of Prediction
 
-Data description from the competition:
 
->You are provided with a large set of high-resolution retina images taken under a variety of imaging conditions. A left and right field is provided for every subject. >Images are labeled with a subject id as well as either left or right (e.g. 1_left.jpeg is the left eye of patient id 1).
->
 >A clinician has rated the presence of diabetic retinopathy in each image on a scale of 0 to 4, according to the following scale:
 >
 >0 - No DR
