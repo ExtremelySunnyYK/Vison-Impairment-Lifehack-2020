@@ -59,7 +59,7 @@ def setup():
     TEST_IMG_PATH = KAGGLE_DIR + 'test_images/'
 
     # Specify title of our final model
-    SAVED_MODEL_NAME = 'notebook/effnet_b5_model.h5'
+    SAVED_MODEL_NAME = 'model/effnet_b5_model.h5'
 
     # Set seed for reproducability
     seed = 1234
@@ -365,7 +365,6 @@ def main():
 
     :returns: ARED's Score
     """
-    setup()
 
     # change code for 1 image
     for i in range(5):

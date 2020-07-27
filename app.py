@@ -23,11 +23,37 @@ import predict
 app = Flask(__name__)
 
 
-# You can use pretrained model from Keras
-# Check https://keras.io/applications/
-from keras.applications.mobilenet_v2 import MobileNetV2
-model = MobileNetV2(weights='imagenet')
+def load_model():
+    """
+    Returns Model for prediction
+    
+    :returns : model
+    """
 
+    EFFNET = 5
+    exec('from efficientnet.keras import EfficientNetB{} as EfficientNet'.format(EFFNET))
+    
+    # Load in EfficientNetB5
+    effnet = EfficientNet(weights=None,  # None,  # 'imagenet',
+                            include_top=False,
+                            input_shape=(IMG_WIDTH, IMG_HEIGHT, CHANNELS))
+    effnet.load_weights(
+        'notebook/effnet_b5_model.h5'
+        )
+    )
+
+    # Replace all Batch Normalization layers by Group Normalization layers
+    for i, layer in enumerate(effnet.layers):
+        if "batch_normalization" in layer.name:
+            effnet.layers[i] = GroupNormalization(groups=32, axis=-1, epsilon=0.00001)
+
+    # Build Custom Model from EFFNET 5
+    model = predict.build_model()
+
+    return model
+
+
+    
 print('Model loaded. Check http://127.0.0.1:5000/')
 
 
