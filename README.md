@@ -3,13 +3,12 @@
 ## Diabetic Retinopathy
 Diabetic retinopathy (DR), also known as diabetic eye disease, is a medical condition in which damage occurs to the retina due to diabetes mellitus. It is a leading cause of blindness. Diabetic retinopathy affects up to 80 percent of those who have had diabetes for 20 years or more. Diabetic retinopathy often has no early warning signs. Retinal (fundus) photography with manual interpretation is a widely accepted screening tool for diabetic retinopathy, with performance that can exceed that of in-person dilated eye examinations.
 
-The below figure shows an example of a healthy patient and a patient with diabetic retinopathy as viewed by fundus photography (source):
 
 An automated tool for grading severity of diabetic retinopathy would be very useful for accelerating detection and treatment. Recently, there have been a number of attempts to utilize deep learning to diagnose DR and automatically grade diabetic retinopathy. This includes a previous competition and work by Google. Even one deep-learning based system is FDA approved.
 
 Clearly, this dataset and deep learning problem is quite important.
 
-Meaning Of Prediction
+## Meaning Of Prediction
 A clinician has rated the presence of diabetic retinopathy in each image on a scale of 0 to 4, according to the following scale:
 
 0 - No DR
@@ -24,4 +23,22 @@ A clinician has rated the presence of diabetic retinopathy in each image on a sc
 
 Your task is to create an automated analysis system capable of assigning a score based on this scale.
 
-How to use our Tool?
+## How to use our Tool? Get started in 1 Min!
+```shell
+# 1. First, clone the repo
+$ git clone https://github.com/mtobeiyf/keras-flask-deploy-webapp.git
+$ cd keras-flask-deploy-webapp
+
+# 2. Install Python packages
+$ pip install -r requirements.txt
+
+# 3. Run!
+$ python app.py
+```
+Open http://localhost:5000 and have fun. :smiley:
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/5097752/71064959-3c34be80-213e-11ea-8e13-91800ca2d345.gif" height="480px" alt="">
+</p>
+
+------------------
