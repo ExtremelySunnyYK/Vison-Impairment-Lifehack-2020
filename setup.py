@@ -123,12 +123,13 @@ def modelling():
         if "batch_normalization" in layer.name:
             effnet.layers[i] = GroupNormalization(groups=32, axis=-1, epsilon=0.00001)
             
-def build_model():
+def build_model(effnet):
     """
     A custom implementation of EfficientNetB5
     for the APTOS 2019 competition
     (Regression)
     """
+    print("> Building Model ...")
     model = Sequential()
     model.add(effnet)
     model.add(GlobalAveragePooling2D())
@@ -192,7 +193,7 @@ def crop_image_from_gray(img, tol=7):
             img = np.stack([img1,img2,img3],axis=-1)
         return img
 
-def preprocess_image(image, sigmaX=10):
+def preprocess_image(x,sigmaX=10):
     """
     The whole preprocessing pipeline:
     1. Read in image
@@ -205,9 +206,13 @@ def preprocess_image(image, sigmaX=10):
     
     :return: A NumPy array containing the preprocessed image
     """
+    image=x[0]
+    IMG_WIDTH=x[1]
+    IMG_HEIGHT=x[2]
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = crop_image_from_gray(image)
     image = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
+    print("PreProcessing Image")
     # image = cv2.addWeighted (image,4, cv2.GaussianBlur(image, (0,0) ,sigmaX), -4, 128)
     return image
 
@@ -363,7 +368,7 @@ def crop_image_from_gray(img, tol=7):
             img = np.stack([img1,img2,img3],axis=-1)
         return img
 
-def preprocess_image(image, sigmaX=10):
+def preprocess_image(image,IMG_WIDTH,IMG_HEIGHT,sigmaX=10):
     """
     The whole preprocessing pipeline:
     1. Read in image
@@ -380,6 +385,7 @@ def preprocess_image(image, sigmaX=10):
     image = crop_image_from_gray(image)
     image = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
     # image = cv2.addWeighted (image,4, cv2.GaussianBlur(image, (0,0) ,sigmaX), -4, 128)
+    print("> Image Preprocessed")
     return image
 
 def main(img):
