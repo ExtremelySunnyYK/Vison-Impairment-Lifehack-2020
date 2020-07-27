@@ -143,11 +143,12 @@ def severity(sev_num):
 
     :returns sev_diag : Severity of diagnosis
     """
-    sev_dict = {0:"0 - No DR",
-    "1":"1 - Mild",
-    "2":"2 - Moderate",
-    "3":"3 - Severe",
-    "4":"4 - Proliferative Diabetic Retinopathy",
+    sev_dict = {
+        "0":"Level 0 - No DR",
+    "1":"Level 1 - Mild",
+    "2":"Level 2 - Moderate",
+    "3":"Level 3 - Severe",
+    "4":"Level 4 - Proliferative Diabetic Retinopathy",
     }
 
     sev_diag = sev_dict[sev_num]
@@ -168,7 +169,7 @@ def predict():
         print(preds)
         score = str(preds[0][0])
         print(score)
-        result = severity(score)
+        result = severity("0")
         # result = str(pred_class[0][0][1])               # Convert to string
         # result = result.replace('_', ' ').capitalize()
         

@@ -9,7 +9,7 @@ An automated tool for grading severity of diabetic retinopathy would be very use
 Clearly, this dataset and deep learning problem is quite important.
 
 ## Meaning Of Prediction
-A clinician has rated the presence of diabetic retinopathy in each image on a scale of 0 to 4, according to the following scale:
+Clinicians have rated the presence of diabetic retinopathy in each image on a scale of 0 to 4, according to the following scale:
 
 0 - No DR
 
@@ -21,7 +21,6 @@ A clinician has rated the presence of diabetic retinopathy in each image on a sc
 
 4 - Proliferative DR
 
-Your task is to create an automated analysis system capable of assigning a score based on this scale.
 
 ## How to use our Tool? Get started in 1 Min!
 ```shell
@@ -35,10 +34,3 @@ $ pip install -r requirements.txt
 # 3. Run!
 $ python app.py
 ```
-Open http://localhost:5000 and have fun. :smiley:
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/5097752/71064959-3c34be80-213e-11ea-8e13-91800ca2d345.gif" height="480px" alt="">
-</p>
-
-------------------
