@@ -34,3 +34,5 @@ $ pip install -r requirements.txt
 # 3. Run!
 $ python app.py
 ```
+
+## Use Notebook for running the code without webapp.
