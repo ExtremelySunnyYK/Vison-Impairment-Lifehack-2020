@@ -42,6 +42,7 @@ import setup
 
 
 
+
 # Declare a flask app
 app = Flask(__name__)
 MODEL_PATH = 'models/effnet_b5_model.h5'
@@ -161,7 +162,7 @@ def predict():
     if request.method == 'POST':
         # Get the image from post request
         img = base64_to_pil(request.json)
-        ben_img,input_img,heated_img = visualize.visualize(img)
+        ben_img,input_img,heated_img = setup.visualize(img)
 
         # Save the image to ./uploads
         # img.save("./uploads/image.png")
