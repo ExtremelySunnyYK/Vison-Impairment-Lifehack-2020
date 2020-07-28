@@ -157,12 +157,19 @@ def severity(sev_num):
 
     return sev_diag
 
+def serve_pil_image(pil_img):
+    img_io = StringIO()
+    pil_img.save(img_io, 'JPEG', quality=70)
+    img_io.seek(0)
+    return send_file(img_io, mimetype='image/jpeg')
+
+
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
     if request.method == 'POST':
         # Get the image from post request
         img = base64_to_pil(request.json)
-        ben_img,input_img,heated_img = setup.visualize(img)
+        # ben_img,input_img,heated_img = setup.visualize(img)
 
         # Save the image to ./uploads
         # img.save("./uploads/image.png")
@@ -173,9 +180,8 @@ def predict():
         score = str(preds[0][0])
         print(score)
         result = severity(score)
-        # result = str(pred_class[0][0][1])               # Convert to string
-        # result = result.replace('_', ' ').capitalize()
         
+
         # Serialize the result, you can add additional fields
         return jsonify(result=result)
 
