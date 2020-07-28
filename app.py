@@ -123,8 +123,6 @@ def model_predict(img, model):
     predictions = model.predict(img_arr)
     print(predictions)
 
-    
-
     coefficients = [0.51,1.51,2.52,3.52]
     optR = setup.OptimizedRounder()
     img_diag = optR.predict(predictions, coefficients).astype(np.uint8)
@@ -163,7 +161,7 @@ def predict():
     if request.method == 'POST':
         # Get the image from post request
         img = base64_to_pil(request.json)
-        # ben_img,input_img,heated_img = setup.apply_mask(img)
+        ben_img,input_img,heated_img = visualize.visualize(img)
 
         # Save the image to ./uploads
         # img.save("./uploads/image.png")
