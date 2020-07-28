@@ -117,10 +117,13 @@ def model_predict(img, model):
     # Preprocessing the image
     img_arr = keras.preprocessing.image.img_to_array(img)
     img_arr = setup.preprocess_image(img_arr,IMG_WIDTH,IMG_HEIGHT)
+    rescale=1 / 255
+    img_arr *= rescale
     img_arr = np.array([img_arr])
     predictions = model.predict(img_arr)
     print(predictions)
 
+    
 
     coefficients = [0.51,1.51,2.52,3.52]
     optR = setup.OptimizedRounder()
@@ -160,6 +163,7 @@ def predict():
     if request.method == 'POST':
         # Get the image from post request
         img = base64_to_pil(request.json)
+        # ben_img,input_img,heated_img = setup.apply_mask(img)
 
         # Save the image to ./uploads
         # img.save("./uploads/image.png")

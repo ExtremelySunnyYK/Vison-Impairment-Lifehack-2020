@@ -193,28 +193,28 @@ def crop_image_from_gray(img, tol=7):
             img = np.stack([img1,img2,img3],axis=-1)
         return img
 
-def preprocess_image(x,sigmaX=10):
-    """
-    The whole preprocessing pipeline:
-    1. Read in image
-    2. Apply masks
-    3. Resize image to desired size
-    4. Add Gaussian noise to increase Robustness
+# def preprocess_image(x,sigmaX=10):
+#     """
+#     The whole preprocessing pipeline:
+#     1. Read in image
+#     2. Apply masks
+#     3. Resize image to desired size
+#     4. Add Gaussian noise to increase Robustness
     
-    :param img: A NumPy Array that will be cropped
-    :param sigmaX: Value used for add GaussianBlur to the image
+#     :param img: A NumPy Array that will be cropped
+#     :param sigmaX: Value used for add GaussianBlur to the image
     
-    :return: A NumPy array containing the preprocessed image
-    """
-    image=x[0]
-    IMG_WIDTH=x[1]
-    IMG_HEIGHT=x[2]
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    image = crop_image_from_gray(image)
-    image = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
-    print("PreProcessing Image")
-    # image = cv2.addWeighted (image,4, cv2.GaussianBlur(image, (0,0) ,sigmaX), -4, 128)
-    return image
+#     :return: A NumPy array containing the preprocessed image
+#     """
+#     image=x[0]
+#     IMG_WIDTH=x[1]
+#     IMG_HEIGHT=x[2]
+#     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+#     image = crop_image_from_gray(image)
+#     image = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
+#     print("PreProcessing Image")
+#     # image = cv2.addWeighted (image,4, cv2.GaussianBlur(image, (0,0) ,sigmaX), -4, 128)
+#     return image
 
 
 class Metrics(Callback):
@@ -387,6 +387,8 @@ def preprocess_image(image,IMG_WIDTH,IMG_HEIGHT,sigmaX=10):
     # image = cv2.addWeighted (image,4, cv2.GaussianBlur(image, (0,0) ,sigmaX), -4, 128)
     print("> Image Preprocessed")
     return image
+
+
 
 def main(img):
     """"

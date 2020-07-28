@@ -27,6 +27,19 @@ def load_image_ben_orig(image,resize=True,crop=False,norm255=True,keras=False):
     
     return image
 
+def transform_image_ben(img,resize=True,crop=False,norm255=True,keras=False):  
+    image=cv2.addWeighted( img,4, cv2.GaussianBlur( img , (0,0) ,  10) ,-4 ,128)
+    
+    # NOTE plt.imshow can accept both int (0-255) or float (0-1), but deep net requires (0-1)
+    if norm255:
+        return image/255
+    elif keras:
+        image = np.expand_dims(image, axis=0)
+        return preprocess_input(image)[0]
+    else:
+        return image.astype(np.int16)
+    
+    return image
 
 def gen_heatmap_img(img, model0, layer_name='last_conv_layer',viz_img=None,orig_img=None):
     preds_raw = model0.predict(img[np.newaxis])
