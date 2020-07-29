@@ -146,11 +146,11 @@ def severity(sev_num):
     :returns sev_diag : Severity of diagnosis
     """
     sev_dict = {
-        "0":"Level 0 - No DR",
-    "1":"Level 1 - Mild",
-    "2":"Level 2 - Moderate",
-    "3":"Level 3 - Severe",
-    "4":"Level 4 - Proliferative Diabetic Retinopathy",
+        "0":"Level 0 - No Retinopathy",
+    "1":"Level 1 - Mild Retinopathy",
+    "2":"Level 2 - Moderate Retinopathy",
+    "3":"Level 3 - Severe Retinopathy",
+    "4":"Level 4 - Proliferative Retinopathy",
     }
 
     sev_diag = sev_dict[sev_num]
