@@ -36,3 +36,9 @@ $ python app.py
 ```
 
 ## Use Notebook for running the code without webapp.
+
+
+## DEMO
+## IOT Proof of Concept Demo
+
+<a href = "https://youtu.be/HD-t8QStoXs" target="_blank"><img src = "https://i.imgur.com/NCkj6A4.png" title = "IOT Demo Video" height="300"/>
