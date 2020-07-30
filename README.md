@@ -36,7 +36,7 @@ $ python app.py
 ```
 
 ## Use Notebook for running the code without webapp.
-
+<a href="https://github.com/ExtremelySunnyYK/Vison-Impairment-Lifehack-2020/blob/master/notebook/.ipynb_checkpoints/efficientnets-for-diabetic-retinopathy-detection-checkpoint.ipynb>Link<a>
 
 ## DEMO
 <a href = "https://youtu.be/HD-t8QStoXs" target="_blank"><img src = "https://i.imgur.com/NCkj6A4.png" title = "IOT Demo Video" height="300"/>
